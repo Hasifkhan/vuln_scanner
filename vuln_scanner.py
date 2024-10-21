@@ -43,7 +43,7 @@ def grab_headers(target):
 
 # Function to display name in style
 def display_styled_name():
-    ascii_banner = pyfiglet.figlet_format("HASIF")  # Replace "HASIF" with your actual name
+    ascii_banner = pyfiglet.figlet_format("HASIF")  # Replace "vuln_scanner" with your actual name
     colored_banner = colored(ascii_banner, 'green')  # You can change the color
     print(colored_banner)
 
