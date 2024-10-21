@@ -1,5 +1,15 @@
 import socket
 import requests
+import pyfiglet
+from termcolor import colored
+
+# Function to get IP address from URL/Domain
+def get_ip_from_url(url):
+    try:
+        return socket.gethostbyname(url)
+    except socket.gaierror:
+        print(f"Unable to resolve {url}")
+        return None
 
 # Function to scan for open ports
 def port_scanner(target, port_range):
@@ -31,11 +41,37 @@ def grab_headers(target):
     for header, value in headers.items():
         print(f"{header}: {value}")
 
+# Function to display name in style
+def display_styled_name():
+    ascii_banner = pyfiglet.figlet_format("HASIF")  # Replace "YOUR NAME" with your actual name
+    colored_banner = colored(ascii_banner, 'green')  # You can change the color
+    print(colored_banner)
+
 # Main execution
 if __name__ == "__main__":
-    target_url = input("Enter target URL (http://example.com): ")
-    target_ip = input("Enter target IP address: ")
-    
+    # Display your name in a styled format
+    display_styled_name()
+
+    # Get inputs from the user
+    target_url = input("Enter target URL (http://example.com) or domain name: ").strip()
+    target_ip = input("Enter target IP address (leave blank if not known): ").strip()
+
+    # If only URL is provided, get the IP address
+    if target_ip == "":
+        if "http" not in target_url:
+            # Prepend http:// if missing
+            target_url = "http://" + target_url
+
+        # Extract domain from URL if needed
+        domain = target_url.split("//")[-1].split("/")[0]
+        target_ip = get_ip_from_url(domain)
+        if not target_ip:
+            print("Failed to resolve domain. Exiting.")
+            exit()
+
+    print(f"\nUsing IP address: {target_ip}")
+    print(f"Using URL: {target_url}")
+
     # Port scanning (common ports range)
     port_scanner(target_ip, (20, 100))
 
